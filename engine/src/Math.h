@@ -5,6 +5,8 @@
 #include <iostream>
 #include <initializer_list>
 
+#define Log(fmt, ...) printf("%s[%s: %d]: " fmt, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__)
+
 template <size_t N>
 class Vector {
 public:
@@ -18,6 +20,10 @@ public:
     }
 
     float operator[](size_t index) const {
+        return data[index];
+    }
+
+    float& operator[](size_t index) {
         return data[index];
     }
 
@@ -51,8 +57,19 @@ public:
         struct {
             float x, y;
         };
+        struct {
+            float w, h;
+        };
         float data[2];
     };
+
+    float operator[](size_t index) const {
+        return data[index];
+    }
+
+    float& operator[](size_t index) {
+        return data[index];
+    }
 
     Vector(const std::initializer_list<float>& l) {
         size_t max = std::min<size_t>(2, l.size());
@@ -76,8 +93,22 @@ public:
         struct {
             float x, y, z;
         };
+        struct {
+            float r, g, b;
+        };
+        struct {
+            float u, v, w;
+        };
         float data[3];
     };
+
+    float operator[](size_t index) const {
+        return data[index];
+    }
+
+    float& operator[](size_t index) {
+        return data[index];
+    }
 
     Vector(const std::initializer_list<float>& l) {
         size_t max = std::min<size_t>(3, l.size());
@@ -101,8 +132,19 @@ public:
         struct {
             float x, y, z, w;
         };
+        struct {
+            float r, g, b, a;
+        };
         float data[4];
     };
+
+    float operator[](size_t index) const {
+        return data[index];
+    }
+
+    float& operator[](size_t index) {
+        return data[index];
+    }
 
     Vector(const std::initializer_list<float>& l) {
         size_t max = std::min<size_t>(4, l.size());
@@ -119,7 +161,8 @@ public:
 using Vec2 = Vector<2>;
 using Vec3 = Vector<3>;
 using Vec4 = Vector<4>;
-using Color = Vec4;
+using Color3 = Vec3;
+using Color4 = Vec4;
 
 inline float cross(const Vector<2>& a, const Vector<2>& b) {
     return a.x * b.y - a.y * b.x;
@@ -210,6 +253,21 @@ Vector<N> operator-=(Vector<N>& a, const Vector<N>& b) {
         a.data[i] -= b.data[i];
     }
     return a;
+}
+
+template <size_t N>
+bool operator==(const Vector<N>& a, const Vector<N>& b) {
+    for(size_t i = 0; i < N; i++) {
+        if(a.data[i] != b.data[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template <size_t N>
+bool operator!=(const Vector<N>& a, const Vector<N>& b) {
+    return !(a == b);
 }
 
 template <size_t N>
@@ -374,33 +432,73 @@ public:
     }
 
     Matrix transpose() const {
-        Matrix result;
         for(size_t i = 0; i < Col; i++) {
             for(size_t j = 0; j < Row; j++) {
-                result.set(j, i, get(i, j));
+                set(j, i, get(i, j));
             }
         }
-        return result;
     }
+
     Matrix inverse() const {
         static_assert(Col == Row, "Matrix inverse only works for square matrices.");
-
-        Matrix result;
         for(size_t i = 0; i < Col; i++) {
             for(size_t j = 0; j < Row; j++) {
                 float sum = 0.0f;
                 for(size_t k = 0; k < Col; k++) {
                     sum += get(k, i) * get(k, j);
                 }
-                result.set(i, j, sum);
+                set(i, j, sum);
             }
-            return result;
         }
     }
 
 private:
     float m_data[Col * Row];
 };
+
+using Mat22 = Matrix<2, 2>;
+using Mat33 = Matrix<3, 3>;
+using Mat44 = Matrix<4, 4>;
+
+template <size_t Col, size_t Row>
+Matrix<Col, Row> transpose(const Matrix<Col, Row>& m) {
+    Matrix<Col, Row> result;
+    for(size_t i = 0; i < Col; i++) {
+        for(size_t j = 0; j < Row; j++) {
+            result.set(j, i, m.get(i, j));
+        }
+    }
+    return result;
+}
+
+template <size_t Col, size_t Row>
+Matrix<Col, Row> inverse(const Matrix<Col, Row>& m) {
+    static_assert(Col == Row, "Matrix inverse only works for square matrices.");
+    Matrix<Col, Row> result = m;
+    for(size_t i = 0; i < Col; i++) {
+        for(size_t j = 0; j < Row; j++) {
+            float sum = 0.0f;
+            for(size_t k = 0; k < Col; k++) {
+                sum += m.get(k, i) * m.get(k, j);
+            }
+            result.set(i, j, sum);
+        }
+    }
+    return result;
+}
+
+template <size_t Col, size_t Row>
+Vector<Row> operator*(const Matrix<Col, Row>& m, const Vector<Col>& v) {
+    Vector<Row> result;
+    for(size_t j = 0; j < Row; j++) {
+        float sum = 0.0f;
+        for(size_t i = 0; i < Col; i++) {
+            sum += v.data[i] * m.get(i, j);
+        }
+        result.data[j] = sum;
+    }
+    return result;
+}
 
 template <size_t Col, size_t Row>
 std::ostream& operator<<(std::ostream& os, const Matrix<Col, Row>& m) {
@@ -433,4 +531,26 @@ Matrix<Col, Row> operator*(const Matrix<Col, Row>& m1, const Matrix<Col, Row>& m
         }
     }
     return result;
+}
+
+struct Rect {
+    Vec2 pos;
+    Vec2 size;
+};
+
+inline bool isPointInRect(const Vec2& p, const Rect& r) {
+    return p.x >= r.pos.x && p.x <= r.pos.x + r.size.w &&
+        p.y >= r.pos.y && p.y <= r.pos.y + r.size.h;
+}
+
+inline bool isRectsIntersect(const Rect& r1, const Rect& r2) {
+    Rect rect;
+    rect.pos.x = std::max(r1.pos.x, r2.pos.x);
+    rect.pos.y = std::max(r1.pos.y, r2.pos.y);
+    rect.pos.w = std::min(r1.pos.x + r1.size.w, r2.pos.x + r2.size.w) - rect.pos.x;
+    rect.pos.h = std::min(r1.pos.y + r1.size.h, r2.pos.y + r2.size.h) - rect.pos.y;
+    if(rect.size.w > 0 && rect.size.h > 0) {
+        return true;
+    }
+    return false;
 }
