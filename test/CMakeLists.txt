@@ -8,3 +8,4 @@ target_link_libraries(test_runner PRIVATE gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(test_runner)
+target_link_libraries(test_runner PRIVATE engine)

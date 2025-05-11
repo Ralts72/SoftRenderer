@@ -4,6 +4,6 @@ project(SoftRenderer)
 set(CMAKE_CXX_STANDARD 20)
 
 file(GLOB SOURCES "*.cpp")
-# file(GLOB SOURCES "*.cpp" ${3RD_PATH}/stb_image/*.cpp)
+
 add_executable(app ${SOURCES})
-#target_link_libraries(app PUBLIC engine)
+target_link_libraries(app PUBLIC engine)
