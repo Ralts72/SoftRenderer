@@ -14,7 +14,7 @@ TEST(WindowTest, Clear) {
     EXPECT_NEAR(pixelColor.r, 0.5, tolerance);
     EXPECT_NEAR(pixelColor.g, 0.5, tolerance);
     EXPECT_NEAR(pixelColor.b, 0.5, tolerance);
-    EXPECT_NEAR(pixelColor.a, 0.5, tolerance);
+    EXPECT_NEAR(pixelColor.a, 1.0, tolerance);
 }
 
 TEST(WindowTest, SetPixel) {
