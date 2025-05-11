@@ -47,7 +47,7 @@ int main() {
     const Color4 color = surface.getPixelColor(100, 100);
     std::cout << "color = " << color << std::endl;
     for(int i = 0; i < 400; i++) {
-        surface.setPixel(i + 40, i + 160, Color4{ 1, 1, 1, 1 });
+        surface.setPixel(i + 40, i + 160, Color4{1, 1, 1, 1});
     }
 
     const auto output_path = "/Users/wsq/SoftRenderer/test_surface.bmp";
