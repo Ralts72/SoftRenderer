@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Window.h"
 
 class Renderer {
