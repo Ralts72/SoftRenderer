@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Window.h"
+#include "Renderer.h"
 
 int main() {
     std::cout << "Hello, World!!!!!" << std::endl;
@@ -41,17 +41,11 @@ int main() {
             << "multi_m = " << multi_m << std::endl
             << "multi_m * multi_v = " << multi_m * multi_v << std::endl;
 
-
-    const Window surface(480, 320);
-    surface.clear(Color4{0.2, 0.5, 0.5, 1});
-    const Color4 color = surface.getPixelColor(100, 100);
-    std::cout << "color = " << color << std::endl;
-    for(int i = 0; i < 400; i++) {
-        surface.setPixel(i + 40, i + 160, Color4{1, 1, 1, 1});
-    }
-
+    renderer.clear(Color4{0.2, 0.5, 0.5, 1});
+    renderer.drawLine({100, 100}, {200, 200}, Color4{1, 0, 0, 1});
     const auto output_path = "/Users/wsq/SoftRenderer/test_surface.bmp";
-    surface.save(output_path);
+    renderer.saveImage(output_path);
+
     Log("Hello, World! %d", 123);
     return 0;
 }
