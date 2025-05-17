@@ -16,7 +16,7 @@ int main() {
         1, 2,
         3, 4
     };
-    Matrix<2, 2> m2{
+    const Matrix<2, 2> m2{
         5, 6,
         7, 8
     };
@@ -42,8 +42,18 @@ int main() {
             << "multi_m * multi_v = " << multi_m * multi_v << std::endl;
 
     renderer.clear(Color4{0.2, 0.5, 0.5, 1});
-    renderer.drawLine({100, 100}, {200, 200}, Color4{1, 0, 0, 1});
-    const auto output_path = "/Users/wsq/SoftRenderer/test_surface.bmp";
+    renderer.drawLine({100, 100}, {500, 200}, Color4{1, 0, 0, 1});
+    renderer.drawLine({100, 100}, {200, 500}, Color4{1, 0, 0, 1});
+
+    renderer.drawLine({500, 500}, {100, 200}, Color4{1, 1, 0, 1});
+    renderer.drawLine({500, 500}, {200, 100}, Color4{1, 1, 0, 1});
+
+    renderer.drawLine({500, 500}, {500, 200}, Color4{0, 1, 0, 1});
+    renderer.drawLine({500, 500}, {200, 500}, Color4{0, 1, 0, 1});
+
+    renderer.drawLine({-500, -500}, {-300, -200}, Color4{1, 1, 0, 1});
+
+    const auto output_path = "../../test_surface.bmp";
     renderer.saveImage(output_path);
 
     Log("Hello, World! %d", 123);

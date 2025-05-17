@@ -1,9 +1,5 @@
 #include <gtest/gtest.h>
-#include "Window.h"
-
-TEST(SampleTest, Addition) {
-    EXPECT_EQ(1 + 1, 2);
-}
+#include "Renderer.h"
 
 TEST(WindowTest, Clear) {
     const Window surface(480, 320);
@@ -30,6 +26,28 @@ TEST(WindowTest, SetPixel) {
     EXPECT_NEAR(pixelColor.g, 1, tolerance);
     EXPECT_NEAR(pixelColor.b, 0, tolerance);
     EXPECT_NEAR(pixelColor.a, 1, tolerance);
+}
+
+TEST(WindowTest, drawLine) {
+    renderer.drawLine({100, 100}, {500, 200}, Color4{1, 0, 0, 1});
+    constexpr float tolerance = 0.01f;
+    const Color4 pixelColor1 = renderer.getPixelColor(100, 100);
+    EXPECT_NEAR(pixelColor1.r, 1, tolerance);
+    EXPECT_NEAR(pixelColor1.g, 0, tolerance);
+    EXPECT_NEAR(pixelColor1.b, 0, tolerance);
+    EXPECT_NEAR(pixelColor1.a, 1, tolerance);
+    renderer.drawLine({500, 500}, {100, 200}, Color4{1, 1, 0, 1});
+    const Color4 pixelColor2 = renderer.getPixelColor(500, 500);
+    EXPECT_NEAR(pixelColor2.r, 1, tolerance);
+    EXPECT_NEAR(pixelColor2.g, 1, tolerance);
+    EXPECT_NEAR(pixelColor2.b, 0, tolerance);
+    EXPECT_NEAR(pixelColor2.a, 1, tolerance);
+    renderer.drawLine({500, 500}, {500, 200}, Color4{0, 1, 0, 1});
+    const Color4 pixelColor3 = renderer.getPixelColor(500, 200);
+    EXPECT_NEAR(pixelColor3.r, 0, tolerance);
+    EXPECT_NEAR(pixelColor3.g, 1, tolerance);
+    EXPECT_NEAR(pixelColor3.b, 0, tolerance);
+    EXPECT_NEAR(pixelColor3.a, 1, tolerance);
 }
 
 int main(int argc, char** argv) {

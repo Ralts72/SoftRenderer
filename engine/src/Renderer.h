@@ -17,6 +17,8 @@ public:
 
     [[nodiscard]] Vec2 getSize() const;
 
+    Color4 getPixelColor(const int x, const int y) const;
+
     void drawLine(const Vec2& p1, const Vec2& p2, const Color4& color) const;
 
     void clear(const Color4& color) const;
@@ -24,6 +26,12 @@ public:
     void saveImage(const std::string& filename) const;
 
 private:
+    void drawLineWithoutClip(const Vec2& p1, const Vec2& p2, const Color4& color) const;
+
+    static uint8_t computeOutcode(const Vec2& p, const Vec2& min, const Vec2& max);
+
+    static bool cohenSutherLand(Vec2& p1, Vec2& p2, const Vec2& min, const Vec2& max);
+
     Renderer();
 
     std::unique_ptr<Window> surface;
