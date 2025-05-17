@@ -1,6 +1,15 @@
 #pragma once
 #include <memory>
 #include "Window.h"
+#include "Camera.h"
+#include <array>
+
+constexpr double PI = 3.14159265358979323846;
+
+struct Viewport {
+    Viewport(const int x, const int y, const int width, const int height): x(x), y(y), width(width), height(height) {}
+    int x, y, width, height;
+};
 
 class Renderer {
 public:
@@ -21,6 +30,8 @@ public:
 
     void drawLine(const Vec2& p1, const Vec2& p2, const Color4& color) const;
 
+    void drawTriangle(const Mat4& model, const std::array<Vec3, 3>& vertices, const Color4& color) const;
+
     void clear(const Color4& color) const;
 
     void saveImage(const std::string& filename) const;
@@ -34,7 +45,9 @@ private:
 
     Renderer();
 
-    std::unique_ptr<Window> surface;
+    std::unique_ptr<Window> m_surface;
+    std::unique_ptr<Camera> m_camera;
+    Viewport m_viewport;
 };
 
 static Renderer& renderer = Renderer::getInstance();

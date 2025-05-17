@@ -1,13 +1,11 @@
 #include "Renderer.h"
 
-#include <random>
-
 Vec2 Renderer::getSize() const {
-    return surface->getSize();
+    return m_surface->getSize();
 }
 
 Color4 Renderer::getPixelColor(const int x, const int y) const {
-    return surface->getPixelColor(x, y);
+    return m_surface->getPixelColor(x, y);
 }
 
 void Renderer::drawLine(const Vec2& p1, const Vec2& p2, const Color4& color) const {
@@ -23,6 +21,32 @@ void Renderer::drawLine(const Vec2& p1, const Vec2& p2, const Color4& color) con
         Log("Line is outside of the surface\n");
     }
 }
+
+void Renderer::drawTriangle(const Mat4& model, const std::array<Vec3, 3>& vertices, const Color4& color) const {
+    std::array<Vec4, 3> new_vertices{};
+    for(int i = 0; i < 3; i++) {
+        new_vertices[i] = Vec4{vertices[i].x, vertices[i].y, vertices[i].z, 1.0f};
+    }
+    for(auto& v: new_vertices) {
+        v = m_camera->getFrustum().mat * model * v;
+        v /= v.w;
+    }
+    std::array<Vec2, 3> new_vertices_2d{};
+    for(int i = 0; i < 3; i++) {
+        new_vertices_2d[i] = Vec2{
+            (new_vertices[i].x + 1.0f) * 0.5f * static_cast<float>(m_viewport.width - 1) + static_cast<float>(m_viewport.x),
+            static_cast<float>(m_viewport.height) - (new_vertices[i].y + 1.0f) * 0.5f * static_cast<float>(m_viewport.height - 1) + static_cast<float>(m_viewport.y)
+        };
+    }
+    for(int i = 0; i < 3; i++) {
+        Vec2 p1 = new_vertices_2d[i];
+        Vec2 p2 = new_vertices_2d[(i + 1) % 3];
+        Log("p1: (%f, %f), p2: (%f, %f)\n", p1.x, p1.y, p2.x, p2.y);
+
+        drawLine(p1, p2, color);
+    }
+}
+
 
 void Renderer::drawLineWithoutClip(const Vec2& p1, const Vec2& p2, const Color4& color) const {
     int x = static_cast<int>(p1.x);
@@ -45,9 +69,9 @@ void Renderer::drawLineWithoutClip(const Vec2& p1, const Vec2& p2, const Color4&
 
     while(x != final_x) {
         if(steep > 0) {
-            surface->setPixel(y, x, color);
+            m_surface->setPixel(y, x, color);
         } else {
-            surface->setPixel(x, y, color);
+            m_surface->setPixel(x, y, color);
         }
 
         e += step;
@@ -60,11 +84,11 @@ void Renderer::drawLineWithoutClip(const Vec2& p1, const Vec2& p2, const Color4&
 }
 
 void Renderer::clear(const Color4& color) const {
-    surface->clear(color);
+    m_surface->clear(color);
 }
 
 void Renderer::saveImage(const std::string& filename) const {
-    surface->save(filename.c_str());
+    m_surface->save(filename.c_str());
 }
 
 constexpr uint8_t INSIDE = 0;
@@ -128,6 +152,9 @@ bool Renderer::cohenSutherLand(Vec2& p1, Vec2& p2, const Vec2& min, const Vec2& 
     return accept;
 }
 
-Renderer::Renderer() {
-    surface = std::make_unique<Window>(800, 800);
+Renderer::Renderer(): m_viewport(0, 0, 1024, 720) {
+    m_surface = std::make_unique<Window>(1024, 720);
+    float aspect = m_surface->getSize().x / m_surface->getSize().y;
+    float fov = 45.0f * PI / 180.0f;
+    m_camera = std::make_unique<Camera>(0.1f, aspect, fov);
 }

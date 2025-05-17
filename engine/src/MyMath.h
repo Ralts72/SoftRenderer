@@ -7,10 +7,11 @@
 
 #define Log(fmt, ...) printf("%s[%s: %d]: " fmt, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__)
 
-template <size_t N>
+template<size_t N>
 class Vector {
 public:
     Vector() = default;
+
     ~Vector() = default;
 
     explicit Vector(float value) {
@@ -41,25 +42,28 @@ public:
     float data[N]{};
 };
 
-template <size_t N>
+template<size_t N>
 const Vector<N> One = Vector<N>(1.0f);
 
-template <size_t N>
+template<size_t N>
 const Vector<N> Zero = Vector<N>(0.0f);
 
-template <>
+template<>
 class Vector<2> {
 public:
     Vector() = default;
+
     ~Vector() = default;
 
     union {
         struct {
             float x, y;
         };
+
         struct {
             float w, h;
         };
+
         float data[2];
     };
 
@@ -83,22 +87,26 @@ public:
     }
 };
 
-template <>
+template<>
 class Vector<3> {
 public:
     Vector() = default;
+
     ~Vector() = default;
 
     union {
         struct {
             float x, y, z;
         };
+
         struct {
             float r, g, b;
         };
+
         struct {
             float u, v, w;
         };
+
         float data[3];
     };
 
@@ -122,19 +130,22 @@ public:
     }
 };
 
-template <>
+template<>
 class Vector<4> {
 public:
     Vector() = default;
+
     ~Vector() = default;
 
     union {
         struct {
             float x, y, z, w;
         };
+
         struct {
             float r, g, b, a;
         };
+
         float data[4];
     };
 
@@ -169,10 +180,10 @@ inline float cross(const Vector<2>& a, const Vector<2>& b) {
 }
 
 inline Vector<3> cross(const Vector<3>& a, const Vector<3>& b) {
-    return Vector<3>{a.y* b.z - a.z * b.y, a.z* b.x - a.x * b.z, a.x* b.y - a.y * b.x};
+    return Vector<3>{a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x};
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator+(const Vector<N>& a, const Vector<N>& b) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -181,7 +192,7 @@ Vector<N> operator+(const Vector<N>& a, const Vector<N>& b) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator-(const Vector<N>& a, const Vector<N>& b) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -190,7 +201,7 @@ Vector<N> operator-(const Vector<N>& a, const Vector<N>& b) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator*(const Vector<N>& a, const Vector<N>& b) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -199,7 +210,7 @@ Vector<N> operator*(const Vector<N>& a, const Vector<N>& b) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator/(const Vector<N>& a, const Vector<N>& b) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -208,7 +219,7 @@ Vector<N> operator/(const Vector<N>& a, const Vector<N>& b) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator*(const Vector<N>& a, float value) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -217,7 +228,7 @@ Vector<N> operator*(const Vector<N>& a, float value) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator/(const Vector<N>& a, float value) {
     Vector<N> result;
     for(size_t i = 0; i < N; i++) {
@@ -226,12 +237,12 @@ Vector<N> operator/(const Vector<N>& a, float value) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator*(float value, const Vector<N>& a) {
     return a * value;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator/=(Vector<N>& a, float value) {
     for(size_t i = 0; i < N; i++) {
         a.data[i] /= value;
@@ -239,7 +250,7 @@ Vector<N> operator/=(Vector<N>& a, float value) {
     return a;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator+=(Vector<N>& a, const Vector<N>& b) {
     for(size_t i = 0; i < N; i++) {
         a.data[i] += b.data[i];
@@ -247,7 +258,7 @@ Vector<N> operator+=(Vector<N>& a, const Vector<N>& b) {
     return a;
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> operator-=(Vector<N>& a, const Vector<N>& b) {
     for(size_t i = 0; i < N; i++) {
         a.data[i] -= b.data[i];
@@ -255,7 +266,7 @@ Vector<N> operator-=(Vector<N>& a, const Vector<N>& b) {
     return a;
 }
 
-template <size_t N>
+template<size_t N>
 bool operator==(const Vector<N>& a, const Vector<N>& b) {
     for(size_t i = 0; i < N; i++) {
         if(a.data[i] != b.data[i]) {
@@ -265,12 +276,12 @@ bool operator==(const Vector<N>& a, const Vector<N>& b) {
     return true;
 }
 
-template <size_t N>
+template<size_t N>
 bool operator!=(const Vector<N>& a, const Vector<N>& b) {
     return !(a == b);
 }
 
-template <size_t N>
+template<size_t N>
 float dot(const Vector<N>& a, const Vector<N>& b) {
     float result = 0.0f;
     for(size_t i = 0; i < N; i++) {
@@ -279,12 +290,12 @@ float dot(const Vector<N>& a, const Vector<N>& b) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 float length(const Vector<N>& a) {
     return std::sqrt(dot(a, a));
 }
 
-template <size_t N>
+template<size_t N>
 Vector<N> normalize(const Vector<N>& a) {
     Vector<N> result;
     float len = length(a);
@@ -296,7 +307,7 @@ Vector<N> normalize(const Vector<N>& a) {
     return result;
 }
 
-template <size_t N>
+template<size_t N>
 std::ostream& operator<<(std::ostream& os, const Vector<N>& a) {
     os << "Vector<" << N << ">(";
     for(size_t i = 0; i < N; i++) {
@@ -309,28 +320,46 @@ std::ostream& operator<<(std::ostream& os, const Vector<N>& a) {
     return os;
 }
 
-template <typename T>
+template<typename T>
 inline T clamp(T value, T min, T max) {
     return std::max(min, std::min(value, max));
 }
 
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 class Matrix {
 public:
     Matrix() = default;
+
     ~Matrix() = default;
 
     explicit Matrix(float value) {
-        for(auto& d : m_data) {
+        for(auto& d: m_data) {
             d = value;
         }
     }
+
+    Matrix identity() {
+        if(Col == Row) {
+            for(size_t i = 0; i < Col; i++) {
+                for(size_t j = 0; j < Row; j++) {
+                    if(i == j) {
+                        set(i, j, 1.0f);
+                    } else {
+                        set(i, j, 0.0f);
+                    }
+                }
+            }
+        }
+        return *this;
+    }
+
     Matrix(const std::initializer_list<float>& l) {
         for(size_t i = 0; i < l.size(); i++) {
             set(i % Col, i / Col, *(l.begin() + i));
         }
     }
+
     Matrix(const std::initializer_list<Vector<Row>>& l) {
         for(size_t i = 0; i < l.size(); i++) {
             const auto& row = *(l.begin() + i);
@@ -343,52 +372,58 @@ public:
     static size_t getCols() { return Col; }
     static size_t getRows() { return Row; }
 
-    [[nodiscard]] float get(size_t col, size_t row) const {
+    [[nodiscard]] float get(const size_t col, const size_t row) const {
         return m_data[col * Row + row];
     }
 
-    void set(size_t col, size_t row, float value) {
+    void set(const size_t col, const size_t row, float value) {
         m_data[col * Row + row] = value;
     }
 
     Matrix operator*=(float value) {
-        for(auto& element : m_data) {
+        for(auto& element: m_data) {
             element *= value;
         }
         return *this;
     }
+
     Matrix operator/=(float value) {
-        for(auto& element : m_data) {
+        for(auto& element: m_data) {
             element /= value;
         }
         return *this;
     }
+
     Matrix operator+=(const Matrix& m) {
         for(size_t i = 0; i < Col * Row; i++) {
             m_data[i] += m.get(i % Col, i / Col);
         }
         return *this;
     }
+
     Matrix operator-=(const Matrix& m) {
         for(size_t i = 0; i < Col * Row; i++) {
             m_data[i] -= m.get(i % Col, i / Col);
         }
         return *this;
     }
+
     Matrix operator*(float value) const {
         Matrix result = *this;
-        for(auto& element : result.m_data) {
+        for(auto& element: result.m_data) {
             element *= value;
         }
         return result;
     }
+
     Matrix operator/(float value) const {
         Matrix result = *this;
-        for(auto& element : result.m_data) {
+        for(auto& element: result.m_data) {
             element /= value;
         }
         return result;
     }
+
     Matrix operator+(const Matrix& m) const {
         Matrix result = *this;
         for(size_t i = 0; i < Col * Row; i++) {
@@ -396,6 +431,7 @@ public:
         }
         return result;
     }
+
     Matrix operator-(const Matrix& m) const {
         Matrix result = *this;
         for(size_t i = 0; i < Col * Row; i++) {
@@ -403,6 +439,7 @@ public:
         }
         return result;
     }
+
     Matrix operator*(const Matrix& m) {
         static_assert(Col == Row, "Matrix multiplication only works for square matrices.");
         Matrix result = *this;
@@ -417,6 +454,7 @@ public:
         }
         return result;
     }
+
     Matrix operator*=(const Matrix& m) {
         static_assert(Col == Row, "Matrix multiplication only works for square matrices.");
         Matrix result = *this;
@@ -433,38 +471,40 @@ public:
         return *this;
     }
 
-    Matrix transpose() const {
+    Matrix transpose() {
+        Matrix result;
         for(size_t i = 0; i < Col; i++) {
             for(size_t j = 0; j < Row; j++) {
-                set(j, i, get(i, j));
+                result.set(j, i, get(i, j));
             }
         }
-        return  *this;
+        return result;
     }
 
     Matrix inverse() const {
         static_assert(Col == Row, "Matrix inverse only works for square matrices.");
+        Matrix result;
         for(size_t i = 0; i < Col; i++) {
             for(size_t j = 0; j < Row; j++) {
                 float sum = 0.0f;
                 for(size_t k = 0; k < Col; k++) {
                     sum += get(k, i) * get(k, j);
                 }
-                set(i, j, sum);
+                result.set(i, j, sum);
             }
         }
-        return  *this;
+        return result;
     }
 
 private:
     float m_data[Col * Row]{};
 };
 
-using Mat22 = Matrix<2, 2>;
-using Mat33 = Matrix<3, 3>;
-using Mat44 = Matrix<4, 4>;
+using Mat2 = Matrix<2, 2>;
+using Mat3 = Matrix<3, 3>;
+using Mat4 = Matrix<4, 4>;
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 Matrix<Col, Row> transpose(const Matrix<Col, Row>& m) {
     Matrix<Col, Row> result;
     for(size_t i = 0; i < Col; i++) {
@@ -475,7 +515,7 @@ Matrix<Col, Row> transpose(const Matrix<Col, Row>& m) {
     return result;
 }
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 Matrix<Col, Row> inverse(const Matrix<Col, Row>& m) {
     static_assert(Col == Row, "Matrix inverse only works for square matrices.");
     Matrix<Col, Row> result = m;
@@ -491,7 +531,7 @@ Matrix<Col, Row> inverse(const Matrix<Col, Row>& m) {
     return result;
 }
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 Vector<Row> operator*(const Matrix<Col, Row>& m, const Vector<Col>& v) {
     Vector<Row> result;
     for(size_t j = 0; j < Row; j++) {
@@ -504,7 +544,7 @@ Vector<Row> operator*(const Matrix<Col, Row>& m, const Vector<Col>& v) {
     return result;
 }
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 std::ostream& operator<<(std::ostream& os, const Matrix<Col, Row>& m) {
     os << "Matrix<" << Col << "," << Row << ">[" << '\n';
     for(size_t i = 0; i < Row; i++) {
@@ -521,7 +561,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<Col, Row>& m) {
     return os;
 }
 
-template <size_t Col, size_t Row>
+template<size_t Col, size_t Row>
 Matrix<Col, Row> operator*(const Matrix<Col, Row>& m1, const Matrix<Col, Row>& m2) {
     static_assert(Col == Row, "Matrix multiplication only works for square matrices.");
     Matrix<Col, Row> result;
@@ -544,7 +584,7 @@ struct Rect {
 
 inline bool isPointInRect(const Vec2& p, const Rect& r) {
     return p.x >= r.pos.x && p.x <= r.pos.x + r.size.w &&
-        p.y >= r.pos.y && p.y <= r.pos.y + r.size.h;
+           p.y >= r.pos.y && p.y <= r.pos.y + r.size.h;
 }
 
 inline bool isRectsIntersect(const Rect& r1, const Rect& r2) {
