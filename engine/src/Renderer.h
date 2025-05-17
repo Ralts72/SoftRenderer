@@ -17,7 +17,7 @@ public:
 
     [[nodiscard]] Vec2 getSize() const;
 
-    Color4 getPixelColor(const int x, const int y) const;
+    [[nodiscard]] Color4 getPixelColor(int x, int y) const;
 
     void drawLine(const Vec2& p1, const Vec2& p2, const Color4& color) const;
 

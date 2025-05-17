@@ -43,7 +43,7 @@ TEST(WindowTest, drawLine) {
     EXPECT_NEAR(pixelColor2.b, 0, tolerance);
     EXPECT_NEAR(pixelColor2.a, 1, tolerance);
     renderer.drawLine({500, 500}, {500, 200}, Color4{0, 1, 0, 1});
-    const Color4 pixelColor3 = renderer.getPixelColor(500, 200);
+    const Color4 pixelColor3 = renderer.getPixelColor(500, 300);
     EXPECT_NEAR(pixelColor3.r, 0, tolerance);
     EXPECT_NEAR(pixelColor3.g, 1, tolerance);
     EXPECT_NEAR(pixelColor3.b, 0, tolerance);
